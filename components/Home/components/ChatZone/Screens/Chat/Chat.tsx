@@ -8,7 +8,6 @@ import {
   useState,
 } from 'react';
 
-import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 
 import { useCreateReducer } from '@/hooks/useCreateReducer';
@@ -34,29 +33,53 @@ interface Props {
 }
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
-  const chatContextValue = useCreateReducer<ChatInitialState>({
-    initialState,
-  });
-
   const {
     state: {
-      selectedConversation,
       conversations,
       database,
+      messages,
       models,
       modelError,
       loading,
       builtInSystemPrompts,
       user,
       savedSettings,
+      selectedConversation,
     },
     dispatch: homeDispatch,
   } = useContext(HomeContext);
+
+  const liveMessages = useRef<Message[]>([]);
+
+  useEffect(() => {
+    liveMessages.current = messages;
+  }, [messages]);
+
+  const chatContextValue = useCreateReducer<ChatInitialState>({
+    initialState,
+  });
+
+  const {
+    state: { selectedConversationMessages },
+    dispatch: chatDispatch,
+  } = chatContextValue;
 
   const [currentMessage, setCurrentMessage] = useState<Message>();
   const [autoScrollEnabled, setAutoScrollEnabled] = useState<boolean>(true);
   const [showScrollDownButton, setShowScrollDownButton] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    if (selectedConversation) {
+      const _conversationMessages = messages.filter(
+        (message) => message.conversationId === selectedConversation.id,
+      );
+      chatDispatch({
+        field: 'selectedConversationMessages',
+        value: _conversationMessages,
+      });
+    }
+  }, [chatDispatch, messages, selectedConversation]);
 
   const getRandomQuote = useCallback(() => {
     const quotes = [
@@ -158,9 +181,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     throttledScrollDown();
     selectedConversation &&
       setCurrentMessage(
-        selectedConversation.messages[selectedConversation.messages.length - 2],
+        selectedConversationMessages[selectedConversationMessages.length - 2],
       );
-  }, [selectedConversation, throttledScrollDown]);
+  }, [selectedConversation, selectedConversationMessages, throttledScrollDown]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -216,7 +239,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               ref={chatContainerRef}
               onScroll={handleScroll}
             >
-              {selectedConversation?.messages.length === 0 ? (
+              {selectedConversationMessages.length === 0 ? (
                 <div className="h-full w-full px-4 flex flex-col self-center items-center align-middle justify-center select-none">
                   <div className="text-center text-black dark:text-white mb-2 text-xl font-light">
                     {quote}
@@ -249,26 +272,29 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 </div>
               ) : (
                 <>
-                  {selectedConversation?.messages.map((message, index) => (
+                  {selectedConversationMessages.map((message, index) => (
                     <MemoizedChatMessage
                       key={index}
                       message={message}
                       messageIndex={index}
-                      onEdit={(conversation, editedMessage) => {
+                      onEdit={(editedMessage) => {
+                        if (!selectedConversation) return;
+
                         setCurrentMessage(editedMessage);
                         // discard edited message and the ones that come after then resend
-                        handleEdit(
-                          user!,
-                          editedMessage,
+                        handleEdit({
+                          user: user!,
+                          updatedMessage: editedMessage,
                           index,
                           stopConversationRef,
                           builtInSystemPrompts,
-                          conversation,
                           conversations,
-                          database!,
+                          database: database!,
                           savedSettings,
-                          homeDispatch,
-                        );
+                          dispatch: homeDispatch,
+                          messages: liveMessages.current,
+                          selectedConversation,
+                        });
                       }}
                     />
                   ))}
@@ -286,33 +312,39 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             <ChatInput
               stopConversationRef={stopConversationRef}
               textareaRef={textareaRef}
-              onSend={(conversation, message) => {
+              onSend={(message) => {
+                if (!selectedConversation) return;
+
                 setCurrentMessage(message);
-                handleSend(
-                  user!,
-                  message,
+                handleSend({
+                  user: user!,
+                  newMessage: message,
                   stopConversationRef,
                   builtInSystemPrompts,
-                  conversation,
                   conversations,
-                  database!,
+                  database: database!,
                   savedSettings,
-                  homeDispatch,
-                );
+                  dispatch: homeDispatch,
+                  messages: liveMessages.current,
+                  selectedConversation,
+                });
               }}
               onScrollDownClick={handleScrollDown}
-              onRegenerate={(conversation) => {
+              onRegenerate={() => {
+                if (!selectedConversation) return;
+
                 if (currentMessage) {
-                  handleRegenerate(
-                    user!,
+                  handleRegenerate({
+                    user: user!,
                     stopConversationRef,
                     builtInSystemPrompts,
-                    conversation,
                     conversations,
-                    database!,
+                    database: database!,
                     savedSettings,
-                    homeDispatch,
-                  );
+                    dispatch: homeDispatch,
+                    messages: liveMessages.current,
+                    selectedConversation,
+                  });
                 }
               }}
               showScrollDownButton={showScrollDownButton}
