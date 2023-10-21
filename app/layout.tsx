@@ -1,5 +1,4 @@
-import { Analytics } from '@vercel/analytics/react';
-
+// import { Analytics } from '@vercel/analytics/react';
 import { Metadata } from 'next';
 
 import '@/styles/globals.css';
@@ -21,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Analytics />
+      {/* <Analytics /> */}
       <body className="absolute inset-0 overflow-hidden overscroll-none">
         {children}
       </body>
