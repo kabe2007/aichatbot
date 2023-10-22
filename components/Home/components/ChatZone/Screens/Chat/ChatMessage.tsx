@@ -9,11 +9,10 @@ import {
 import { FC, memo, useContext, useEffect, useRef, useState } from 'react';
 
 import { useTranslation } from 'next-i18next';
-import Image from 'next/image';
 
 import { storageDeleteMessages } from '@/utils/app/storage/messages';
 
-import { Conversation, Message } from '@/types/chat';
+import { Message } from '@/types/chat';
 
 import HomeContext from '@/components/Home/home.context';
 import { CodeBlock } from '@/components/Markdown/CodeBlock';
@@ -38,7 +37,7 @@ export const ChatMessage: FC<Props> = memo(
     const {
       state: {
         database,
-        conversations,
+        messages,
         messageIsStreaming,
         selectedConversation,
         user,
@@ -92,14 +91,18 @@ export const ChatMessage: FC<Props> = memo(
       let messagesToBeDeleted = [];
       if (findIndex < 0) return;
 
-      if (
-        findIndex < selectedConversationMessages.length - 1 &&
-        selectedConversationMessages[findIndex + 1].role === 'assistant'
-      ) {
-        messagesToBeDeleted.push(
-          selectedConversationMessages[findIndex].id,
-          selectedConversationMessages[findIndex + 1].id,
-        );
+      if (findIndex < selectedConversationMessages.length - 1) {
+        messagesToBeDeleted.push(selectedConversationMessages[findIndex].id);
+        for (
+          let i = findIndex + 1;
+          i < selectedConversationMessages.length;
+          i++
+        ) {
+          if (selectedConversationMessages[i].role === 'user') {
+            break;
+          }
+          messagesToBeDeleted.push(selectedConversationMessages[i].id);
+        }
       } else {
         messagesToBeDeleted.push(selectedConversationMessages[findIndex].id);
       }
@@ -108,7 +111,7 @@ export const ChatMessage: FC<Props> = memo(
         database!,
         user!,
         messagesToBeDeleted,
-        selectedConversationMessages,
+        messages,
       );
       homeDispatch({ field: 'messages', value: updatedMessages });
     };
