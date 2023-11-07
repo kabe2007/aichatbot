@@ -4,20 +4,12 @@
 
 [![Join our Discord](https://discordapp.com/api/guilds/1124558062171209771/widget.png?style=banner2)](https://discord.gg/rMH2acSEzq)
 
-![Screenshot-1](./public/screenshots/screenshot-1.png)
-
-![Screenshot-2](./public/screenshots/screenshot-2.png)
-
-![Screenshot-3](./public/screenshots/screenshot-3.png)
-
-![Screenshot-4](./public/screenshots/screenshot-4.png)
-
-![Screenshot-5](./public/screenshots/screenshot-5.png)
-
 # 🎉 Welcome to unSAGED
 
 unSAGED is a cutting-edge chat kit engineered for seamless interaction with AI models. It allows you to easily have conversations with different AI models from a variety of providers, all in one place. It also allows you to manage multiple users and conversations, and synchronize them across different devices.
 Leveraging the power of Next.js and Supabase, it offers a user-friendly and robust interface for engaging with AI models from a variety of providers.
+
+You can use it live at [unsaged.com](https://unsaged.com). Just make sure not to put in personal information as your conversations will be stored in Postgres (Supabase) until you delete them.
 
 - [🎉 Welcome to unSAGED](#-welcome-to-unsaged)
   - [🌟 Key Features](#-key-features)
@@ -35,6 +27,7 @@ Leveraging the power of Next.js and Supabase, it offers a user-friendly and robu
     - [Env Variables](#env-variables)
   - [📝 License](#-license)
   - [🤝 How to Contribute](#-how-to-contribute)
+  - [📸 Screenshots](#-screenshots)
   - [📚 Built With](#-built-with)
 
 ## 🌟 Key Features
@@ -48,15 +41,22 @@ Leveraging the power of Next.js and Supabase, it offers a user-friendly and robu
 ## 🤖 Supported AI Models
 
 - **[OpenAI](https://openai.com/)**
-  - GPT-3.5-Turbo
-  - GPT-3.5-Turbo-16k
-  - GPT-4
-  - GPT-4-32k 
+  - GPT-3.5-Turbo, GPT-3.5-Turbo-16k
+  - GPT-4, GPT-4-32k, GPT-4-Turbo
 - **[Anthropic](https://www.anthropic.com/)**
   - Claude Instant 1 (100k)
   - Claude 2 (100k)
 - **[Google PaLM 2](https://developers.generativeai.google/products/palm)**
   - Chat Bison (Bard)
+- **[Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)**
+  - GPT-3.5-Turbo, GPT-3.5-Turbo-16k
+  - GPT-4, GPT-4-32k
+- **[Ollama](https://github.com/jmorganca/ollama)**
+  - Llama2-7b, Llama2-13b, Llama2-70b
+  - Codellama-7b, Codellama-13b, Codellama-70b
+  - Wizard-7b, Wizard-13b, Wizard-34b
+  - Phind-Codellama
+  - Mistral, Mistral-OpenOrca
 
 ## 🚧 Getting Started with unSAGED
 
@@ -141,7 +141,6 @@ When deploying the application, the following environment variables can be set:
 | No        | OPENAI_API_TYPE                             | `openai`                                            | The API type, options are `openai` or `azure`                                                                                        |
 | No        | OPENAI_API_VERSION                          | `2023-03-15-preview`                                | Only applicable for Azure OpenAI                                                                                                     |
 | No        | OPENAI_ORGANIZATION                         |                                                     | Your OpenAI organization ID                                                                                                          |
-| No        | AZURE_DEPLOYMENT_ID                         |                                                     | Only applicable for Azure OpenAI                                                                                                     |
 | No        | ANTHROPIC_API_URL                           | `https://api.anthropic.com/v1`                      | The base url for the Anthropic API. [Get Key](https://www.anthropic.com/earlyaccess)                                                 |
 | No        | ANTHROPIC_API_KEY                           |                                                     | The default API key used for authenticating with Anthropic. See [Versioning](https://docs.anthropic.com/claude/reference/versioning) |
 | No        | ANTHROPIC_API_VERSION                       | `2023-06-01`                                        | The version of the Anthropic API                                                                                                     |
@@ -211,6 +210,20 @@ unSAGED is licensed under the Apache 2.0 License. For more information, please r
 ## 🤝 How to Contribute
 
 We welcome contributions to the unSAGED project! If you're interested in contributing, please take a look at our [CONTRIBUTING.md](./CONTRIBUTING.md) file for guidelines and details on the process.
+
+![Alt](https://repobeats.axiom.co/api/embed/2c05c0cd48aef8736ac7e34523691c1bfa08b835.svg 'Repobeats analytics image')
+
+## 📸 Screenshots
+
+![Screenshot-1](./public/screenshots/screenshot-1.png)
+
+![Screenshot-2](./public/screenshots/screenshot-2.png)
+
+![Screenshot-3](./public/screenshots/screenshot-3.png)
+
+![Screenshot-4](./public/screenshots/screenshot-4.png)
+
+![Screenshot-5](./public/screenshots/screenshot-5.png)
 
 ## 📚 Built With
 

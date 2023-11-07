@@ -1,5 +1,3 @@
-import { AZURE_DEPLOYMENT_ID } from '@/utils/app/const';
-
 export interface AiModel {
   id: string;
   maxLength: number; // maximum length of a message
@@ -48,11 +46,25 @@ export const PossibleAiModels: PossibleAiModelsInterface = {
     requestLimit: 30000,
     vendor: 'OpenAI',
   },
+  'gpt-4-1106-preview': {
+    id: 'gpt-4-1106-preview',
+    maxLength: 500000,
+    tokenLimit: 128000,
+    requestLimit: 120000,
+    vendor: 'OpenAI',
+  },
   'gpt-35-turbo': {
-    id: AZURE_DEPLOYMENT_ID,
+    id: 'will get from azure',
     maxLength: 12000,
     tokenLimit: 4000,
     requestLimit: 3000,
+    vendor: 'OpenAI',
+  },
+  'gpt-35-turbo-16k': {
+    id: 'will get from azure',
+    maxLength: 48000,
+    tokenLimit: 16000,
+    requestLimit: 12000,
     vendor: 'OpenAI',
   },
   'claude-instant-1': {
@@ -184,6 +196,20 @@ export const PossibleAiModels: PossibleAiModelsInterface = {
   'phind-codellama:34b-python': {
     id: 'phind-codellama:34b-python',
     maxLength: 32000,
+    tokenLimit: 4096,
+    requestLimit: 3000,
+    vendor: 'Ollama',
+  },
+  'mistral:latest': {
+    id: 'mistral:latest',
+    maxLength: 16000,
+    tokenLimit: 4096,
+    requestLimit: 3000,
+    vendor: 'Ollama',
+  },
+  'mistral-openorca:latest': {
+    id: 'mistral-openorca:latest',
+    maxLength: 16000,
     tokenLimit: 4096,
     requestLimit: 3000,
     vendor: 'Ollama',
