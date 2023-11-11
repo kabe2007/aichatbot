@@ -1,4 +1,4 @@
-import { OLLAMA_HOST } from '@/utils/app/const';
+import { OLLAMA_HOST, OLLAMA_BASIC_USER, OLLAMA_BASIC_PWD } from '@/utils/app/const';
 
 import { PossibleAiModels } from '@/types/ai-models';
 
@@ -17,12 +17,15 @@ export async function getAvailableOllamaModels() {
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
+        ...((OLLAMA_BASIC_USER && OLLAMA_BASIC_PWD) && {
+          Authorization: `Basic ${Buffer.from(OLLAMA_BASIC_USER + ":" + OLLAMA_BASIC_PWD).toString('base64')}`,
+        }),
       },
     });
 
     if (response.status !== 200) {
-      console.error('Error fetching Ollama models');
-      console.error(response.text());
+      const error = await response.text();
+      console.error('Error fetching OpenAI models', response.status, error);
       return { data: [] };
     }
 
